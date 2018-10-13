@@ -1,23 +1,3 @@
-/*
-Copyright 2018  Gilbert Assaf gassaf@gmx.de
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2 of
-the License or (at your option) version 3 or any later version
-accepted by the membership of KDE e.V. (or its successor approved
-by the membership of KDE e.V.), which shall act as a proxy
-defined in Section 14 of version 3 of the license.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 import QtQuick 2.6
 import QtQuick.Controls 2.4
 import QtQuick.Controls.Styles 1.4
@@ -30,7 +10,7 @@ ApplicationWindow {
     height: 480
     visible: true
     background: Rectangle {
-        color: "#232629"
+            color: "#232629"
     }
 
     menuBar: MenuBar {
@@ -98,89 +78,64 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
 
-        RowLayout {
+        Row {
             id: bla
             visible: false
-            spacing: 50
+
             RadioButton {
                 checked: true
                 text: qsTr("Deg")
-                contentItem: Text {
-                    text: parent.text
-                    font: parent.font
-                    opacity: enabled ? 1.0 : 0.3
-                    color: parent.down ? "#fdbc4b" : "#fcfcfc"
-                    verticalAlignment: Text.AlignVCenter
-                    leftPadding: parent.indicator.width + parent.spacing
-                }
             }
 
             RadioButton {
-                id: radioButton
                 text: qsTr("Rad")
-                contentItem: Text {
-                    text: parent.text
-                    font: parent.font
-                    opacity: enabled ? 1.0 : 0.3
-                    color: parent.down ? "#fdbc4b" : "#fcfcfc"
-                    verticalAlignment: Text.AlignVCenter
-                    leftPadding: parent.indicator.width + parent.spacing
-                }
             }
 
             RadioButton {
-                text: "Grad"
-
-
-                contentItem: Text {
-                    text: parent.text
-                    font: parent.font
-                    opacity: enabled ? 1.0 : 0.3
-                    color: parent.down ? "#fdbc4b" : "#fcfcfc"
-                    verticalAlignment: Text.AlignVCenter
-                    leftPadding: parent.indicator.width + parent.spacing
-                }
-
+                text: qsTr("Grad")
             }
         }
 
 
         GridLayout{
             columns: 5
-            columnSpacing: 20
-            id: grid
+            columnSpacing: 0
+            rowSpacing: 0
 
-            ColumnLayout{
+            Column{
                 id: foo
                 visible: false
-                spacing: 0
+                spacing: 16
 
-                KCalcButton { label: "Hyp"
+                signal buttonPressed
+
+                Button { text: "Hyp"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "Sin"
+                Button { text: "Sin"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "Cos"
+                Button { text: "Cos"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "Tan"
+                Button { text: "Tan"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "Log"
+                Button { text: "Log"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "Ln"
+                Button { text: "Ln"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
 
             }
 
-
-            ColumnLayout {
+            Column {
                 id: bar
                 visible: false
-                spacing: 0
+                spacing: 16
+
+                signal buttonPressed
 
                 KCalcButton { label: "Mod"
                     Layout.fillHeight: true
@@ -213,29 +168,7 @@ ApplicationWindow {
                 columnSpacing: 0
                 rowSpacing: 0
                 id: main
-
-                KCalcButton {
-                    label: "%"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
-
-                KCalcButton {
-                    label: "÷"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
-                KCalcButton {
-                    label: "×"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
-
-                KCalcButton {
-                    label: "−"
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
+                //anchors.fill: parent
 
                 KCalcButton {
                     label: "7";
@@ -271,7 +204,6 @@ ApplicationWindow {
                 }
                 KCalcButton {
                     label: "+"
-                    Layout.rowSpan: 2
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
@@ -339,13 +271,6 @@ ApplicationWindow {
                 }
 
                 KCalcButton {
-                    label: "="
-                    Layout.rowSpan: 2
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                }
-
-                KCalcButton {
                     label: "0"
                     onClicked: display.label += "0"
                     Shortcut {
@@ -361,41 +286,63 @@ ApplicationWindow {
                     Layout.fillWidth: true
                 }
 
-                /*KCalcButton {
+                KCalcButton {
+                    label: "−"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
+
+                KCalcButton {
                     label: "√"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                }*/
-
+                }
+                KCalcButton {
+                    label: "÷"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
+                KCalcButton {
+                    label: "×"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
                 KCalcButton {
                     label: "C"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
-
-            }
-
-            ColumnLayout {
-                spacing: 0
-                id: science
-                visible: false
-
-                KCalcButton { label: "Shift"
+                KCalcButton {
+                    label: "="
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
+            }
+
+
+
+            GridLayout {
+                columns: 2
+                columnSpacing: 0
+                rowSpacing: 0
+                id: science
+                visible: false
+
+                signal buttonPressed
+
+                KCalcButton { label: "Shift"
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true}
                 KCalcButton { label: "C"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "←"
+                KCalcButton { label: "<-"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
                 KCalcButton { label: "AC"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
             }
-
-
         }
     }
 }

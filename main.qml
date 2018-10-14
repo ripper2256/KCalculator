@@ -22,6 +22,7 @@ import QtQuick 2.6
 import QtQuick.Controls 2.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.11
+import backend 1.0
 
 ApplicationWindow {
     id: applicationWindow
@@ -33,16 +34,20 @@ ApplicationWindow {
         color: "#232629"
     }
 
+    KCalcDisplay {
+        id: backend
+    }
+    
     function setScienceMode(vis) {
         scientific_buttons1.visible = vis;
         scientific_buttons2.visible = vis;
         angleMode.visible = vis;
         pbShift.visible = vis;
-        pbArrow.visible = vis;
+        pbBackspace.visible = vis;
         pbMemPlusMinus.visible = vis;
-        pbMc.visible = vis;
-        pbMr.visible = vis;
-        pbMs.visible = vis;
+        pbMemClear.visible = vis;
+        pbMemRecall.visible = vis;
+        pbMemStore.visible = vis;
         sideLayout.columns = vis ? 2 : 1;
     }
 
@@ -103,6 +108,7 @@ ApplicationWindow {
         DisplayTest {
             id: display
             Layout.fillWidth: true
+            label: backend.text_
         }
 
         RowLayout {
@@ -237,27 +243,30 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "÷"
+                    onClicked: backend.slotDivisionclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
                     label: "×"
+                    onClicked: backend.slotMultiplicationclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
 
                 KCalcButton {
                     label: "−"
+                    onClicked: backend.slotMinusclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
 
                 KCalcButton {
                     label: "7";
-                    onClicked: display.label += "7"
+                    onClicked: backend.enterDigit(7)
                     Shortcut {
                         sequence: "7"
-                        onActivated: display.label += "7"
+                        onActivated: backend.enterDigit(7)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -265,10 +274,10 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "8";
-                    onClicked: display.label += "8"
+                    onClicked: backend.enterDigit(8)
                     Shortcut {
                         sequence: "8"
-                        onActivated: display.label += "8"
+                        onActivated: backend.enterDigit(8)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -276,16 +285,17 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "9"
-                    onClicked: display.label += "9"
+                    onClicked: backend.enterDigit(9)
                     Shortcut {
                         sequence: "9"
-                        onActivated: display.label += "9"
+                        onActivated: backend.enterDigit(9)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
                     label: "+"
+                    onClicked: backend.slotPlusclicked();
                     Layout.rowSpan: 2
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -293,30 +303,30 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "4"
-                    onClicked: display.label += "4"
+                    onClicked: backend.enterDigit(4)
                     Shortcut {
                         sequence: "4"
-                        onActivated: display.label += "4"
+                        onActivated: backend.enterDigit(4)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
                     label: "5"
-                    onClicked: display.label += "5"
+                    onClicked: backend.enterDigit(5)
                     Shortcut {
                         sequence: "5"
-                        onActivated: display.label += "5"
+                        onActivated: backend.enterDigit(5)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
                     label: "6"
-                    onClicked: display.label += "6"
+                    onClicked: backend.enterDigit(6)
                     Shortcut {
                         sequence: "6"
-                        onActivated: display.label += "6"
+                        onActivated: backend.enterDigit(6)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -324,30 +334,30 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "1"
-                    onClicked: display.label += "1"
+                    onClicked: backend.enterDigit(1)
                     Shortcut {
                         sequence: "1"
-                        onActivated: display.label += "1"
+                        onActivated: backend.enterDigit(1)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
                     label: "2"
-                    onClicked: display.label += "2"
+                    onClicked: backend.enterDigit(2)
                     Shortcut {
                         sequence: "2"
-                        onActivated: display.label += "2"
+                        onActivated: backend.enterDigit(2)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
                     label: "3"
-                    onClicked: display.label += "3"
+                    onClicked: backend.enterDigit(3)
                     Shortcut {
                         sequence: "3"
-                        onActivated: display.label += "3"
+                        onActivated: backend.enterDigit(3)
                     }
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -355,6 +365,7 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "="
+                    onClicked: backend.slotEqualclicked()
                     Layout.rowSpan: 2
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -362,10 +373,10 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "0"
-                    onClicked: display.label += "0"
+                    onClicked: backend.enterDigit(0)
                     Shortcut {
                         sequence: "0"
-                        onActivated: display.label += "0"
+                        onActivated: backend.enterDigit(0)
                     }
                     Layout.columnSpan: 2
                     Layout.fillHeight: true
@@ -373,6 +384,7 @@ ApplicationWindow {
                 }
                 KCalcButton {
                     label: "."
+                    onClicked: backend.slotPeriodclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
@@ -396,6 +408,7 @@ ApplicationWindow {
                 }
                 KCalcButton {
                     label: "C"
+                    onClicked: backend.slotClearclicked();
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
@@ -449,6 +462,7 @@ ApplicationWindow {
                 KCalcButton {
                     id: pbPlusMinus
                     label: "+/-"
+                    onClicked: backend.slotPlusMinusclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }

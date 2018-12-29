@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QDebug>
+#include <QtQuick/QQuickItem>
 #include "kcalcdisplay.h"
 #include "kcalc.h"
 
@@ -31,12 +33,13 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<KCalcDisplay>("backend", 1, 0, "KCalcDisplay");
+    qmlRegisterType<KCalculator>("backend", 1, 0, "KCalculator");
+
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
     if (engine.rootObjects().isEmpty())
-        return -1;  
-    
+        return -1;
 
     return app.exec();
 }

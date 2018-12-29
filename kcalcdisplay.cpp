@@ -75,7 +75,7 @@ bool KCalcDisplay::setAmount(const KNumber &new_amount) {
 	}
 
 	setText(display_str);
-// 	emit changedAmount(display_amount_);
+	emit changedAmount(display_amount_);
 	return true;
 }
 
@@ -259,7 +259,7 @@ void KCalcDisplay::setText(const QString &string)
 #endif
 	}
 //     update();
-     emit changedText();
+    emit changedText(text_);
 }
 
 QString KCalcDisplay::formatDecimalNumber(QString string)
@@ -470,10 +470,6 @@ bool KCalcDisplay::changeSign() {
 
 /** Start: KCalculator */
 
-void KCalcDisplay::slotPlusclicked() {
-	core.enterOperation(getAmount(), CalcEngine::FUNC_ADD);
- 	updateDisplay(UPDATE_FROM_CORE);
-}
 
 void KCalcDisplay::updateDisplay(UpdateFlags flags) {
 
@@ -485,56 +481,4 @@ void KCalcDisplay::updateDisplay(UpdateFlags flags) {
 
 // 	pbShift->setChecked(false);
 
-}
-
-void KCalcDisplay::slotMinusclicked() {
-
-    core.enterOperation(getAmount(), CalcEngine::FUNC_SUBTRACT);
-    updateDisplay(UPDATE_FROM_CORE);
-}
-
-void KCalcDisplay::slotMultiplicationclicked() {
-
-	core.enterOperation(getAmount(), CalcEngine::FUNC_MULTIPLY);
-	updateDisplay(UPDATE_FROM_CORE);
-}
-
-void KCalcDisplay::slotDivisionclicked() {
-
-    core.enterOperation(getAmount(), CalcEngine::FUNC_DIVIDE);
-    updateDisplay(UPDATE_FROM_CORE);
-}
-
-void KCalcDisplay::slotEqualclicked() {
-    core.enterOperation(getAmount(), CalcEngine::FUNC_EQUAL);
-    updateDisplay(UPDATE_FROM_CORE);
-}
-
-void KCalcDisplay::slotAllClearclicked() {
-
-	core.Reset();
-    sendEvent(KCalcDisplay::EventReset);
-	updateDisplay(UPDATE_FROM_CORE);
-}
-
-void KCalcDisplay::slotClearclicked() {
-
-     sendEvent(KCalcDisplay::EventClear);
-}
-
-void KCalcDisplay::slotPlusMinusclicked() {
-
-	// display can only change sign, when in input mode, otherwise we
-	// need the core to do this.
-	if (!sendEvent(KCalcDisplay::EventChangeSign)) {
-		core.InvertSign(getAmount());
-		updateDisplay(UPDATE_FROM_CORE);
-	}
-}
-
-void KCalcDisplay::slotPeriodclicked() {
-
-	// i know this isn't locale friendly, should be converted to appropriate
-	// value at lower levels
-    newCharacter(QLocale().decimalPoint());
 }

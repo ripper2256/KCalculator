@@ -41,7 +41,6 @@ class KCalcDisplay : public QObject
 {
 
     Q_OBJECT
-    Q_PROPERTY(QString text_ WRITE setText READ text NOTIFY changedText)
 
 public:
     explicit KCalcDisplay(QObject *parent = nullptr);
@@ -73,19 +72,12 @@ public:
     };
     
     Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
-    Q_INVOKABLE void slotPlusclicked();
-    Q_INVOKABLE void slotMinusclicked();
-    Q_INVOKABLE void slotDivisionclicked();
-    Q_INVOKABLE void slotMultiplicationclicked();
-    Q_INVOKABLE void slotEqualclicked();
-    Q_INVOKABLE void slotClearclicked();
-    Q_INVOKABLE void slotAllClearclicked();
-    Q_INVOKABLE void slotPlusMinusclicked();
-    Q_INVOKABLE void slotPeriodclicked();
     void updateDisplay(UpdateFlags flags);
 
-signals:
-    void changedText();
+
+Q_SIGNALS:
+    void changedText(const QString &);
+    void changedAmount(const KNumber &);
 
 private:
     bool changeSign();

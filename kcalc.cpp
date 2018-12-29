@@ -24,14 +24,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLocale>
 #include "kcalc.h"
 #include "kcalcdisplay.h"
+#include <QDebug>
 
-KCalculator::KCalculator() {
-    
+KCalculator::KCalculator(QObject *parent) : QObject(parent) {
+	connect(&calc_display, &KCalcDisplay::changedText, this, &KCalculator::setText);
+	emit changedText();
 }
 
 void KCalculator::slotPlusclicked() {
 	core.enterOperation(calc_display.getAmount(), CalcEngine::FUNC_ADD);
  	updateDisplay(UPDATE_FROM_CORE);
+}
+
+void KCalculator::setText(const QString &string) {
+    text_ = string;
+	emit changedText();
 }
 
 void KCalculator::updateDisplay(UpdateFlags flags) {
@@ -70,7 +77,6 @@ void KCalculator::slotEqualclicked() {
 }
 
 void KCalculator::slotAllClearclicked() {
-
 	core.Reset();
     calc_display.sendEvent(KCalcDisplay::EventReset);
 	updateDisplay(UPDATE_FROM_CORE);
@@ -96,4 +102,14 @@ void KCalculator::slotPeriodclicked() {
 	// i know this isn't locale friendly, should be converted to appropriate
 	// value at lower levels
     calc_display.newCharacter(QLocale().decimalPoint());
+}
+
+
+void KCalculator::enterDigit(int data) {
+    calc_display.enterDigit(data);
+}
+
+
+QString KCalculator::text() const {
+	return text_;
 }

@@ -30,14 +30,15 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
+
     background: Rectangle {
         color: "#232629"
     }
 
-    KCalcDisplay {
-        id: backend
+    KCalculator {
+            id: backend
     }
-    
+
     function setScienceMode(vis) {
         scientific_buttons1.visible = vis;
         scientific_buttons2.visible = vis;
@@ -422,6 +423,7 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "AC"
+                    onClicked: backend.slotAllClearclicked();
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }

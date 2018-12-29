@@ -26,18 +26,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kcalc_core.h"
 #include "kcalcdisplay.h"
 
-class KCalculator
+class KCalculator : public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(QString text_ WRITE setText READ text NOTIFY changedText)
+
 
     public:
-    explicit KCalculator();
-    ~KCalculator();
+    explicit KCalculator(QObject *parent = nullptr);
 
         enum UpdateFlag {
         UPDATE_FROM_CORE    = 1,
         UPDATE_STORE_RESULT = 2
     };
-    
+
     Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
     Q_INVOKABLE void slotPlusclicked();
     Q_INVOKABLE void slotMinusclicked();
@@ -48,9 +50,19 @@ class KCalculator
     Q_INVOKABLE void slotAllClearclicked();
     Q_INVOKABLE void slotPlusMinusclicked();
     Q_INVOKABLE void slotPeriodclicked();
+    Q_INVOKABLE void enterDigit(int data);
     void updateDisplay(UpdateFlags flags);
+    QString text() const;
+    void setText(const QString &string);
+
+    signals:
+        void changedText();
+
+
 private:
     CalcEngine core;
     KCalcDisplay calc_display;
+    QString text_;
+
 };
 #endif

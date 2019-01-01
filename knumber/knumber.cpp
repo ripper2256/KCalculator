@@ -273,7 +273,7 @@ KNumber::KNumber() : value_(new detail::knumber_integer(0)) {
 //------------------------------------------------------------------------------
 // Name: KNumber
 //------------------------------------------------------------------------------
-KNumber::KNumber(const QString &s) : value_(0) {
+KNumber::KNumber(const QString &s) : value_(nullptr) {
 
 	const QRegExp special_regex(QLatin1String("^(inf|-inf|nan)$"));
 	const QRegExp integer_regex(QLatin1String("^[+-]?\\d+$"));
@@ -314,7 +314,7 @@ KNumber::KNumber(const QString &s) : value_(0) {
 			}
 		}
 
-		// we need to normalize the decimal searator to US style because that's
+		// we need to normalize the decimal separator to US style because that's
 		// the only type that the GMP function accept
 		QString new_s = s;
 		new_s.replace(DecimalSeparator, QLatin1String("."));
@@ -381,7 +381,7 @@ KNumber::KNumber(double value) : value_(new detail::knumber_float(value)) {
 //------------------------------------------------------------------------------
 // Name: KNumber
 //------------------------------------------------------------------------------
-KNumber::KNumber(const KNumber &other) : value_(0) {
+KNumber::KNumber(const KNumber &other) : value_(nullptr) {
 	if(&other != this) {
 		value_ = other.value_->clone();
 	}

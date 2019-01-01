@@ -56,7 +56,7 @@ void knumber_fraction::set_split_off_integer_for_fraction_output(bool value) {
 //------------------------------------------------------------------------------
 knumber_fraction::knumber_fraction(const QString &s) {
 	mpq_init(mpq_);
-	mpq_set_str(mpq_, s.toLatin1(), 10);
+        mpq_set_str(mpq_, s.toLatin1().constData(), 10);
 	mpq_canonicalize(mpq_);
 }
 
@@ -156,7 +156,7 @@ knumber_base *knumber_fraction::add(knumber_base *rhs) {
 	}
 
 	Q_ASSERT(0);
-	return 0;
+    return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -182,7 +182,7 @@ knumber_base *knumber_fraction::sub(knumber_base *rhs) {
 	}
 
 	Q_ASSERT(0);
-	return 0;
+    return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ knumber_base *knumber_fraction::mul(knumber_base *rhs) {
 	}
 
 	Q_ASSERT(0);
-	return 0;
+    return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -264,7 +264,7 @@ knumber_base *knumber_fraction::div(knumber_base *rhs) {
 	}
 
 	Q_ASSERT(0);
-	return 0;
+    return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -468,7 +468,7 @@ knumber_base *knumber_fraction::pow(knumber_base *rhs) {
 
 		// ok, so if any part of the number is > 1,000,000, then we risk
 		// the pow function overflowing... so we'll just convert to float to be safe
-		// TODO: at some point, we should figure out exactly what the threashold is
+		// TODO: at some point, we should figure out exactly what the threshold is
 		//       and if there is a better way to determine if the pow function will
 		//       overflow.
 		if(mpz_cmpabs_ui(mpq_numref(mpq_), 1000000) > 0 || mpz_cmpabs_ui(mpq_denref(mpq_), 1000000) > 0 || mpz_cmpabs_ui(mpq_numref(p->mpq_), 1000000) > 0 || mpz_cmpabs_ui(mpq_denref(p->mpq_), 1000000) > 0) {
@@ -559,7 +559,7 @@ knumber_base *knumber_fraction::pow(knumber_base *rhs) {
 	}
 
 	Q_ASSERT(0);
-	return 0;
+    return nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -753,7 +753,7 @@ QString knumber_fraction::toString(int precision) const {
 				mpz_neg(num, num);
 			}
 
-    		const size_t size = gmp_snprintf(NULL, 0, "%Zd %Zd/%Zd", integer_part_1.mpz_, num, mpq_denref(mpq_)) + 1;
+            const size_t size = gmp_snprintf(nullptr, 0, "%Zd %Zd/%Zd", integer_part_1.mpz_, num, mpq_denref(mpq_)) + 1;
 			QScopedArrayPointer<char> buf(new char[size]);
     		gmp_snprintf(&buf[0], size, "%Zd %Zd/%Zd", integer_part_1.mpz_, num, mpq_denref(mpq_));
 
@@ -766,7 +766,7 @@ QString knumber_fraction::toString(int precision) const {
 			mpz_init(num);
 			mpq_get_num(num, mpq_);
 
-    		const size_t size = gmp_snprintf(NULL, 0, "%Zd/%Zd", num, mpq_denref(mpq_)) + 1;
+            const size_t size = gmp_snprintf(nullptr, 0, "%Zd/%Zd", num, mpq_denref(mpq_)) + 1;
 			QScopedArrayPointer<char> buf(new char[size]);
     		gmp_snprintf(&buf[0], size, "%Zd/%Zd", num, mpq_denref(mpq_));
 

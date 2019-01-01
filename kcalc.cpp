@@ -21,10 +21,48 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <QLocale>
+
+#include "kcalc_version.h"
 #include "kcalc.h"
+
+#include <clocale>
+
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QCursor>
+#include <QKeyEvent>
+#include <QMenuBar>
+#include <QShortcut>
+#include <QStyle>
+#include <QButtonGroup>
+
+#include <KAboutData>
+#include <KAcceleratorManager>
+#include <KActionCollection>
+#include <KColorMimeData>
+#include <KConfigDialog>
+#include <KStandardAction>
+#include <KToggleAction>
+#include <KToolBar>
+#include <kxmlguifactory.h>
+#include <Kdelibs4ConfigMigrator>
+#include <KCrash>
+
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QtQuick/QQuickItem>
+
+#include "kcalc_bitset.h"
+#include "kcalc_const_menu.h"
+#include "kcalc_settings.h"
+#include "kcalc_statusbar.h"
 #include "kcalcdisplay.h"
-#include <QDebug>
+
+namespace {
+const char description[] = I18N_NOOP("KDE Calculator");
+const int maxprecision   = 1000;
+}
 
 KCalculator::KCalculator(QObject *parent) : QObject(parent) {
 	connect(&calc_display, &KCalcDisplay::changedText, this, &KCalculator::setText);
@@ -112,4 +150,30 @@ void KCalculator::enterDigit(int data) {
 
 QString KCalculator::text() const {
 	return text_;
+}
+
+
+////////////////////////////////////////////////////////////////
+// Include the meta-object code for classes in this file
+//
+
+
+//------------------------------------------------------------------------------
+// Name: kdemain
+// Desc: entry point of the application
+//------------------------------------------------------------------------------
+extern "C" Q_DECL_EXPORT int kdemain(int argc, char *argv[]) {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QGuiApplication app(argc, argv);
+
+    qmlRegisterType<KCalculator>("backend", 1, 0, "KCalculator");
+
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+    return app.exec();
 }

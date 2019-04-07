@@ -52,6 +52,7 @@ public:
         EventChangeSign
     };
     
+    void deleteLastDigit();
     bool sendEvent(Event event);
     Q_INVOKABLE void enterDigit(int data);
     bool setAmount(const KNumber &new_amount);

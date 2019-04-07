@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.6
+import QtQuick 2.11
 import QtQuick.Controls 2.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.11
@@ -30,6 +30,10 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
+    
+    Component.onCompleted: {
+        setScienceMode(false);
+    }
 
     background: Rectangle {
         color: "#232629"
@@ -49,26 +53,26 @@ ApplicationWindow {
         pbMemClear.visible = vis;
         pbMemRecall.visible = vis;
         pbMemStore.visible = vis;
+        menuConstants.enabled = vis;
         sideLayout.columns = vis ? 2 : 1;
     }
 
     menuBar: MenuBar {
         Menu {
             title: qsTr("&File")
-            Action { text: qsTr("&New...") }
-            Action { text: qsTr("&Open...") }
-            Action { text: qsTr("&Save") }
-            Action { text: qsTr("Save &As...") }
-            MenuSeparator { }
             Action { text: qsTr("&Quit") }
         }
         Menu {
             title: qsTr("&Edit")
+            Action { text: qsTr("Undo") }
+            Action { text: qsTr("Redo") }
+            MenuSeparator { }
             Action { text: qsTr("Cu&t") }
             Action { text: qsTr("&Copy") }
             Action { text: qsTr("&Paste") }
         }
         Menu {
+            id: menuConstants
             title: qsTr("&Constants")
             Action { text: qsTr("Mathematics") }
             Action { text: qsTr("Electro") }
@@ -238,6 +242,7 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "%"
+                    onClicked: backend.slotPercentclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
@@ -257,6 +262,10 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "−"
+                    Shortcut {
+                        sequence: "-"
+                        onActivated: backend.slotMinusclicked()
+                    }
                     onClicked: backend.slotMinusclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -296,6 +305,10 @@ ApplicationWindow {
                 }
                 KCalcButton {
                     label: "+"
+                    Shortcut {
+                        sequence: "+"
+                        onActivated: backend.slotPlusclicked();
+                    }
                     onClicked: backend.slotPlusclicked();
                     Layout.rowSpan: 2
                     Layout.fillHeight: true
@@ -366,7 +379,11 @@ ApplicationWindow {
 
                 KCalcButton {
                     label: "="
-                    onClicked: backend.slotEqualclicked()
+                    Shortcut {
+                        sequence: "Enter"
+                        onActivated: backend.slotEqualclicked();
+                    }
+                    onClicked: backend.slotEqualclicked();
                     Layout.rowSpan: 2
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -385,6 +402,10 @@ ApplicationWindow {
                 }
                 KCalcButton {
                     label: "."
+                    Shortcut {
+                        sequence: "."
+                        onActivated: backend.slotPeriodclicked()
+                    }
                     onClicked: backend.slotPeriodclicked()
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -416,6 +437,7 @@ ApplicationWindow {
 
                 KCalcButton {
                     id: pbBackspace
+                    onClicked: backend.slotBackspaceclicked();
                     label: "←"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -430,12 +452,15 @@ ApplicationWindow {
 
                 KCalcButton {
                     id: pbMemStore
+                    onClicked: backend.slotMemStoreclicked();
                     label: "MS"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
 
                 KCalcButton {
+                    id: pbParenOpen
+                    onClicked: backend.slotParenOpenclicked();
                     label: "("
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -443,12 +468,15 @@ ApplicationWindow {
 
                 KCalcButton {
                     id: pbMemClear
+                    onClicked: backend.slotMemClearclicked();
                     label: "MC"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
 
                 KCalcButton {
+                    id: pbParenClose
+                    onClicked: backend.slotParenCloseclicked();
                     label: ")"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -456,6 +484,7 @@ ApplicationWindow {
 
                 KCalcButton {
                     id: pbMemRecall
+                    onClicked: backend.slotMemRecallclicked();
                     label: "MR"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -471,6 +500,10 @@ ApplicationWindow {
 
                 KCalcButton {
                     id: pbMemPlusMinus
+                    onClicked: {
+                        backend.slotMemPlusMinusclicked();
+                        pbMemRecall.enabled=true;
+                    }
                     label: "M+"
                     Layout.fillHeight: true
                     Layout.fillWidth: true

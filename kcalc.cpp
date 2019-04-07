@@ -64,7 +64,10 @@ const char description[] = I18N_NOOP("KDE Calculator");
 const int maxprecision   = 1000;
 }
 
-KCalculator::KCalculator(QObject *parent) : QObject(parent) {
+KCalculator::KCalculator(QObject *parent) : QObject(parent),
+shift_mode_(false),
+		hyp_mode_(false),
+		memory_num_(0.0){
 	connect(&calc_display, &KCalcDisplay::changedText, this, &KCalculator::setText);
 	emit changedText();
 }
@@ -142,11 +145,94 @@ void KCalculator::slotPeriodclicked() {
     calc_display.newCharacter(QLocale().decimalPoint());
 }
 
+void KCalculator::slotPercentclicked() {
+    core.enterOperation(calc_display.getAmount(), CalcEngine::FUNC_PERCENT);
+    updateDisplay(UPDATE_FROM_CORE);
+}
+
+void KCalculator::slotMemStoreclicked() {
+
+	EnterEqual();
+
+	memory_num_ = calc_display.getAmount();
+	//calc_display.setStatusText(MemField, QStringLiteral("M"));
+	//statusBar()->setMemoryIndicator(true);
+	//pbMemRecall->setEnabled(true);
+}
+
+void KCalculator::slotMemClearclicked() {
+
+	memory_num_ = KNumber::Zero;
+	//statusBar()->setMemoryIndicator(false);
+	//calc_display->setStatusText(MemField, QString());
+	//pbMemRecall->setDisabled(true);
+}
+
+void KCalculator::slotParenCloseclicked() {
+
+    core.ParenClose(calc_display.getAmount());
+    updateDisplay(UPDATE_FROM_CORE);
+}
+
+void KCalculator::slotParenOpenclicked() {
+
+    core.ParenOpen(calc_display.getAmount());
+}
+
+void KCalculator::slotMemRecallclicked() {
+
+	// temp. work-around
+	calc_display.sendEvent(KCalcDisplay::EventReset);
+
+	calc_display.setAmount(memory_num_);
+    updateDisplay({});
+}
+
+void KCalculator::slotMemPlusMinusclicked() {
+
+	bool tmp_shift_mode = shift_mode_; // store this, because next command deletes shift_mode_
+	EnterEqual(); // finish calculation so far, to store result into MEM
+
+	if (!tmp_shift_mode) {
+		memory_num_ += calc_display.getAmount();
+	} else {
+		memory_num_ -= calc_display.getAmount();
+	}
+
+	//pbShift->setChecked(false);
+	//statusBar()->setMemoryIndicator(true);
+	//calc_display.setStatusText(MemField, i18n("M"));
+	//pbMemRecall->setEnabled(true);
+}
+
+void KCalculator::EnterEqual() {
+    
+    core.enterOperation(calc_display.getAmount(), CalcEngine::FUNC_EQUAL);
+    updateDisplay(UPDATE_FROM_CORE | UPDATE_STORE_RESULT);
+}
+
+void KCalculator::slotBackspaceclicked() {
+    calc_display.deleteLastDigit();
+}
 
 void KCalculator::enterDigit(int data) {
     calc_display.enterDigit(data);
 }
 
+void KCalculator::slotShifttoggled(bool flag) {
+/*
+	shift_mode_ = flag;
+
+	emit switchMode(ModeShift, flag);
+
+	statusBar()->setShiftIndicator(shift_mode_);
+	if (shift_mode_) {
+		calc_display->setStatusText(ShiftField, i18n("Shift"));
+	} else {
+		calc_display->setStatusText(ShiftField, QString());
+	}
+	*/
+}
 
 QString KCalculator::text() const {
 	return text_;

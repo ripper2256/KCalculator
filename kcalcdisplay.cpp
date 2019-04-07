@@ -312,6 +312,37 @@ QString KCalcDisplay::formatDecimalNumber(QString string)
 	return string;
 }
 
+void KCalcDisplay::deleteLastDigit() {
+
+	// Only partially implemented !!
+	if (eestate_) {
+		if (str_int_exp_.isNull()) {
+			eestate_ = false;
+		} else {
+			const int length = str_int_exp_.length();
+			if (length > 1) {
+				str_int_exp_.chop(1);
+			} else {
+				str_int_exp_ = QLatin1String((const char *)nullptr);
+			}
+		}
+	} else {
+		const int length = str_int_.length();
+		if (length > 1) {
+			if (str_int_[length-1] == QLocale().decimalPoint()) {
+				period_ = false;
+			}
+			str_int_.chop(1);
+		} else {
+			Q_ASSERT(!period_);
+			str_int_[0] = QLatin1Char('0');
+		}
+	}
+
+	updateDisplay();
+}
+
+
 QString KCalcDisplay::groupDigits(const QString &displayString, int numDigits) {
 
 	QString tmpDisplayString;

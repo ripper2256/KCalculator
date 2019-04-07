@@ -35,12 +35,13 @@ class KCalculator : public QObject
     public:
     explicit KCalculator(QObject *parent = nullptr);
 
-        enum UpdateFlag {
+    enum UpdateFlag {
         UPDATE_FROM_CORE    = 1,
         UPDATE_STORE_RESULT = 2
     };
-
+    
     Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
+    
     Q_INVOKABLE void slotPlusclicked();
     Q_INVOKABLE void slotMinusclicked();
     Q_INVOKABLE void slotDivisionclicked();
@@ -50,19 +51,58 @@ class KCalculator : public QObject
     Q_INVOKABLE void slotAllClearclicked();
     Q_INVOKABLE void slotPlusMinusclicked();
     Q_INVOKABLE void slotPeriodclicked();
+    Q_INVOKABLE void slotPercentclicked();
+    Q_INVOKABLE void slotBackspaceclicked();
+    Q_INVOKABLE void slotMemStoreclicked();
     Q_INVOKABLE void enterDigit(int data);
+    Q_INVOKABLE void slotMemClearclicked();
+    Q_INVOKABLE void slotMemRecallclicked();
+    Q_INVOKABLE void slotParenCloseclicked();
+    Q_INVOKABLE void slotParenOpenclicked();
+    Q_INVOKABLE void slotMemPlusMinusclicked();
+    Q_INVOKABLE void slotShifttoggled(bool myboolean);
     void updateDisplay(UpdateFlags flags);
     QString text() const;
     void setText(const QString &string);
-
+/*
+    Q_SIGNALS:
+    void switchMode(ButtonModeFlags, bool);
+  */  
     signals:
         void changedText();
-
+protected Q_SLOTS:
+    void EnterEqual();
 
 private:
+    
+    enum StatusField {
+        ShiftField = 0,
+        BaseField,
+        AngleField,
+        MemField
+    };
+	
+    enum AngleMode {
+        DegMode = 0,
+        RadMode,
+        GradMode
+    };
+    
+	enum BaseMode {
+        BinMode = 2,
+        OctMode = 8,
+        DecMode = 10,
+        HexMode = 16
+    };
+
+    bool shift_mode_;
+    bool hyp_mode_;
     CalcEngine core;
     KCalcDisplay calc_display;
     QString text_;
+    KNumber memory_num_;
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KCalculator::UpdateFlags)
 #endif

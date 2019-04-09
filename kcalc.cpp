@@ -238,6 +238,22 @@ QString KCalculator::text() const {
 	return text_;
 }
 
+void KCalculator::copy()
+{
+    calc_display.slotCopy();
+}
+
+void KCalculator::cut()
+{
+    calc_display.slotCut();
+}
+
+void KCalculator::paste()
+{
+    calc_display.slotPaste();
+}
+
+
 
 ////////////////////////////////////////////////////////////////
 // Include the meta-object code for classes in this file

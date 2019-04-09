@@ -75,6 +75,10 @@ public:
     Q_DECLARE_FLAGS(UpdateFlags, UpdateFlag)
     void updateDisplay(UpdateFlags flags);
 
+public Q_SLOTS:
+    void slotCut();
+    void slotCopy();
+    void slotPaste(bool bClipboard = true);    
 
 Q_SIGNALS:
     void changedText(const QString &);

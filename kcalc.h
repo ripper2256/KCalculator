@@ -61,6 +61,9 @@ class KCalculator : public QObject
     Q_INVOKABLE void slotParenOpenclicked();
     Q_INVOKABLE void slotMemPlusMinusclicked();
     Q_INVOKABLE void slotShifttoggled(bool myboolean);
+    Q_INVOKABLE void copy();
+    Q_INVOKABLE void cut();
+    Q_INVOKABLE void paste();
     void updateDisplay(UpdateFlags flags);
     QString text() const;
     void setText(const QString &string);

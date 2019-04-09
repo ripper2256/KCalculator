@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "knumber.h"
 #include <knotification.h>
 #include <QString>
+#include <QApplication>
+#include <QClipboard>
 
 #include <QDebug>
 
@@ -498,6 +500,100 @@ bool KCalcDisplay::changeSign() {
 	updateDisplay();
 	return true;
 }
+
+void KCalcDisplay::slotCut() {
+
+    slotCopy();
+    sendEvent(EventReset);
+}
+
+void KCalcDisplay::slotCopy() {
+
+	QString txt = text_;
+
+	switch(num_base_) {
+	case NB_HEX:
+		txt.prepend(QLatin1String("0x"));
+		txt.remove(QLatin1Char(' '));
+		break;
+	case NB_BINARY:
+		txt.prepend(QLatin1String("0b"));
+		txt.remove(QLatin1Char(' '));
+		break;
+	case NB_OCTAL:
+		txt.prepend(QLatin1String("0"));
+		txt.remove(QLatin1Char(' '));
+		break;
+	case NB_DECIMAL:
+		txt.remove(QLocale().groupSeparator());
+		break;
+	}
+
+	(QApplication::clipboard())->setText(txt, QClipboard::Clipboard);
+	(QApplication::clipboard())->setText(txt, QClipboard::Selection);
+}
+
+//------------------------------------------------------------------------------
+// Name: slotPaste
+// Desc: 
+//------------------------------------------------------------------------------
+void KCalcDisplay::slotPaste(bool bClipboard) {
+
+	QString tmp_str = (QApplication::clipboard())->text(bClipboard ? QClipboard::Clipboard : QClipboard::Selection);
+
+	if (tmp_str.isNull()) {
+		if (beep_) {
+			KNotification::beep();
+		}
+		return;
+	}
+
+	NumBase tmp_num_base = num_base_;
+
+	// fix up string
+	tmp_str = tmp_str.trimmed();
+	
+	if (groupdigits_) {
+		tmp_str.remove(QLocale().groupSeparator());
+	}
+	
+	tmp_str = tmp_str.toLower();
+
+	// determine base
+	if (tmp_str.startsWith(QLatin1String("0x"))) {
+		tmp_num_base = NB_HEX;
+		tmp_str.remove(0, 2);
+	} else if (tmp_str.startsWith(QLatin1String("0b"))) {
+		tmp_num_base = NB_BINARY;
+		tmp_str.remove(0, 2);
+	} else if (tmp_str.startsWith(QLatin1String("0"))) {
+		// we don't want this to trigger on "0.xxxxxx" cases
+		if(tmp_str.length() < 2 || QString(tmp_str[1]) != KNumber::decimalSeparator()) {
+			tmp_num_base = NB_OCTAL;
+			tmp_str.remove(0, 1);
+		}
+	}
+
+	if (tmp_num_base != NB_DECIMAL) {
+		bool was_ok;
+		const qint64 tmp_result = tmp_str.toULongLong(&was_ok, tmp_num_base);
+
+		if (!was_ok) {
+			setAmount(KNumber::NaN);
+			if (beep_) {
+				KNotification::beep();
+			}
+			return;
+		}
+		setAmount(KNumber(tmp_result));
+	} else {
+		setAmount(KNumber(tmp_str));
+		if (beep_ && display_amount_ == KNumber::NaN) {
+			KNotification::beep();
+		}
+	}
+}
+
 
 /** Start: KCalculator */
 

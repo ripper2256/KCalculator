@@ -67,9 +67,18 @@ ApplicationWindow {
             Action { text: qsTr("Undo") }
             Action { text: qsTr("Redo") }
             MenuSeparator { }
-            Action { text: qsTr("Cu&t") }
-            Action { text: qsTr("&Copy") }
-            Action { text: qsTr("&Paste") }
+            Action { 
+                text: qsTr("Cu&t") 
+                onTriggered: backend.cut();
+            }
+            Action { 
+                text: qsTr("&Copy") 
+                onTriggered: backend.copy();
+            }
+            Action { 
+                text: qsTr("&Paste") 
+                onTriggered: backend.paste();
+            }
         }
         Menu {
             id: menuConstants
@@ -201,29 +210,40 @@ ApplicationWindow {
                 visible: false
                 spacing: 0
 
-                KCalcButton { label: "Mod"
+                KCalcButton { 
+                    id: pbMod
+                    label: "Mod"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "1/x"
+                KCalcButton { 
+                    id: pbReci
+                    label: "1/x"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "x!"
+                KCalcButton { 
+                    id: pbFactorial
+                    label: "x!"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
-                KCalcButton { label: "x²"
+                KCalcButton { 
+                    id: pbSquare
+                    label: "x²"
                     Layout.fillHeight: true
                     Layout.fillWidth: true}
                 KCalcButton {
+                    id: pbPower
                     label: "xʸ"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
+                    id: pbCube
                     label: "x³"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                 }
                 KCalcButton {
+                    id: pbEE
                     label: "x-10ʸ"
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -380,7 +400,7 @@ ApplicationWindow {
                 KCalcButton {
                     label: "="
                     Shortcut {
-                        sequence: "Enter"
+                        sequence: "="
                         onActivated: backend.slotEqualclicked();
                     }
                     onClicked: backend.slotEqualclicked();
